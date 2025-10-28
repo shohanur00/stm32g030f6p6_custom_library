@@ -1,0 +1,108 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.39.0.0
+Copyright (C) 2023 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: de ee
+ee
+User-based license: Keil MDK Community (non-commercial free of charge)
+Valid until: Jun 1 2033. Cached until: Nov 3 2025
+ 
+Tool Versions:
+Toolchain:       Keil MDK Community (non-commercial free of charge  Version: 5.39.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.21
+Assembler:       Armasm.exe V6.21
+Linker/Locator:  ArmLink.exe V6.21
+Library Manager: ArmAr.exe V6.21
+Hex Converter:   FromElf.exe V6.21
+CPU DLL:         SARMCM3.DLL V5.39.0.0
+Dialog DLL:      DARMCM1.DLL V1.19.6.0
+Target DLL:      UL2CM3.DLL V1.164.9.0
+Dialog DLL:      TARMCM1.DLL V1.14.6.0
+ 
+<h2>Project:</h2>
+E:\stm32g030f6p6_custom_library\custom_library.uvprojx
+Project File Date:  10/28/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.21', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
+Rebuild target 'stm32g030f6p6'
+flash.c(1): warning: In file included from...
+./flash.h(17): warning: no newline at end of file [-Wnewline-eof]
+   17 | #endif
+      |       ^
+1 warning generated.
+compiling flash.c...
+app.c(2): warning: In file included from...
+./app.h(4): warning: no newline at end of file [-Wnewline-eof]
+    4 | void App_Main_Loop(void);
+      |                          ^
+app.c(13): warning: no previous extern declaration for non-static variable 'fw_crc' [-Wmissing-variable-declarations]
+   13 | uint32_t fw_crc;
+      |          ^
+app.c(13): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   13 | uint32_t fw_crc;
+      | ^
+2 warnings generated.
+compiling app.c...
+main.c(2): warning: In file included from...
+./app.h(4): warning: no newline at end of file [-Wnewline-eof]
+    4 | void App_Main_Loop(void);
+      |                          ^
+1 warning generated.
+compiling main.c...
+compiling gpio.c...
+crc.c(38): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+   38 |     uint32_t endAddr = startAddr + length;
+      |              ^
+crc.c(24): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+   24 |         CRC->DR = data[i];
+      |                   ^~~~
+2 warnings generated.
+compiling crc.c...
+assembling startup_stm32g030xx.s...
+RTE/Device/STM32G030F6Px/system_stm32g0xx.c(286): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  286 |   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos)];
+      |         ^~~~~~~~~~~~~
+1 warning generated.
+compiling system_stm32g0xx.c...
+linking...
+Program Size: Code=652 RO-data=208 RW-data=0 ZI-data=1632  
+".\Objects\custom_library.axf" - 0 Error(s), 7 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.9.0.pack
+                ARM::CMSIS@5.9.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.6.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32G0xx_DFP.1.5.0.pack
+                Keil::STM32G0xx_DFP@1.5.0
+                STMicroelectronics STM32G0 Series Device Support
+   * Component: Startup Version: 1.4.2
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_stm32g030f6p6
+  C:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include
+  C:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@5.6.0
+
+   * Component: Keil::Device:Startup@1.4.2
+      Source file:   MDK/Device/Source/ARM/STM32G0x0_SB_OPT.s
+      Source file:   MDK/Device/Source/ARM/STM32G0x0_DB_OPT.s
+      Include file:  Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g0xx.h
+      Source file:   Drivers/CMSIS/Device/ST/STM32G0xx/Source/Templates/arm/startup_stm32g030xx.s
+      Source file:   Drivers/CMSIS/Device/ST/STM32G0xx/Source/Templates/system_stm32g0xx.c
+Build Time Elapsed:  00:00:00
+</pre>
+</body>
+</html>
