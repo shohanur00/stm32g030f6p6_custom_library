@@ -66,6 +66,11 @@ void sw_timebase_counter_set_reload_value(uint8_t	index, uint32_t	value);
 void sw_timebase_counter_reset(uint8_t index);
 void sw_timebase_counter_reset_flag(uint8_t	index);
 void sw_timebase_counter_start(uint8_t	index);
+void sw_timebase_counter_stop(uint8_t	index);
+void sw_timebase_counter_set_securely(uint8_t index,uint32_t value);
+
+
+
 
 
 void sw_hardware_timer_disable(void);

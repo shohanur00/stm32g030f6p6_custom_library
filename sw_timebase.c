@@ -399,13 +399,61 @@ void sw_timebase_counter_reset_flag(uint8_t	index){
 
 
 void sw_timebase_counter_start(uint8_t	index){
+		if(sw_timebase_counter_get_status(index) != COUNTER_STATE_STARTED){
+				sw_timebase_counter_set_status(index,COUNTER_STATE_START);
+		}
 	
+}
+
+void sw_timebase_counter_stop(uint8_t	index){
+		if(sw_timebase_counter_get_status(index) != COUNTER_STATE_STOPPED){
+				sw_timebase_counter_set_status(index,COUNTER_STATE_STOP);
+		}
 	
 }
 
 
+void sw_timebase_counter_set_securely(uint8_t index,uint32_t value){
+	
+	if(sw_timebase_counter_get_status(index) == COUNTER_STATE_RESET){
+		sw_timebase_counter_set_current_value(index,0);
+		sw_timebase_counter_set_temporary_value(index,0);
+		sw_timebase_counter_set_target_value(index,value);
+		sw_timebase_counter_set_end_value(index,sw_timebase_get_seconds()+value);
+		sw_timebase_counter_set_reload_value(index,value);
+		sw_timebase_counter_set_status(index,COUNTER_STATE_START);
+	}
+	
+}
 
 
+void sw_timebase_counter_set_forcefully(uint8_t index,uint32_t value){
+		sw_timebase_counter_reset(index);
+		sw_timebase_counter_set_securely(index,value);
+}
+
+
+void sw_timebase_counter_update(uint8_t index){
+	uint32_t curr_state_value = 0;
+	if(sw_timebase_counter_get_status(index) == COUNTER_STATE_STARTED){
+		curr_state_value = sw_timebase_get_seconds();
+		sw_timebase_counter_set_temporary_value(index,sw_timebase_counter_get_end_value(index) - curr_state_value);
+		sw_timebase_counter_set_current_value(index,sw_timebase_counter_get_target_value(index) - sw_timebase_counter_get_temporary_value(index));
+		if(sw_timebase_counter_get_temporary_value(index) <= 0){
+			
+			sw_timebase_counter_set_current_value(index,sw_timebase_counter_get_target_value(index));
+			sw_timebase_counter_set_temporary_value(index,0);
+			sw_timebase_counter_set_end_value(index,0);
+			sw_timebase_counter_set_reload_value(index,sw_timebase_counter_get_reload_value(index));
+			sw_timebase_counter_set_status(index,COUNTER_STATE_EXPIRED);
+		}
+	}
+	else if(sw_timebase_counter_get_status(index) == COUNTER_STATE_STOPPED){
+			curr_state_value = sw_timebase_get_seconds();
+			sw_timebase_counter_set_end_value(index,curr_state_value+sw_timebase_counter_get_temporary_value(index));
+			sw_timebase_counter_set_current_value(index,sw_timebase_counter_get_target_value(index) - sw_timebase_counter_get_temporary_value(index));
+	}
+}
 
 
 /************************************************************************************/
