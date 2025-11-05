@@ -16,17 +16,19 @@ typedef enum {
 } GPIO_OType_t;
 
 typedef enum {
+    GPIO_NOPULL   = 0x00U,
+    GPIO_PULLUP   = 0x01U,
+    GPIO_PULLDOWN = 0x02U
+} GPIO_Pull_t;
+
+typedef enum {
     GPIO_SPEED_LOW      = 0x00U,
     GPIO_SPEED_MEDIUM   = 0x01U,
     GPIO_SPEED_HIGH     = 0x02U,
     GPIO_SPEED_VERYHIGH = 0x03U
 } GPIO_Speed_t;
 
-typedef enum {
-    GPIO_NOPULL   = 0x00U,
-    GPIO_PULLUP   = 0x01U,
-    GPIO_PULLDOWN = 0x02U
-} GPIO_Pull_t;
+
 
 void GPIO_Init(GPIO_TypeDef *GPIOx, uint16_t pin,
                GPIO_Mode_t mode, GPIO_OType_t otype,

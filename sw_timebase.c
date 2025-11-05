@@ -1,0 +1,442 @@
+#include "sw_timebase.h"
+
+
+
+
+typedef union {
+  struct {
+    uint8_t PeriodFlag : 1;
+    uint8_t Value      : 4;
+    uint8_t Reserved   : 3;
+  };
+  uint8_t StatusByte;
+} volatile sw_timebase_status_t;
+
+
+
+typedef	struct sw_timebase_config_t{
+	
+	volatile uint32_t UpdateRate;
+	
+}sw_timebase_config_t;
+
+
+typedef struct sw_timebase_time_t{
+	
+	volatile	uint16_t	sub_seconds;															//This will change at main loop
+	volatile 	uint32_t	seconds;																	//This will change at main loop
+	volatile	uint16_t	shadow_subseconds;												//This will change during interrupt happen
+	volatile	uint32_t	shadow_seconds; 													//This will change during interrupt happen
+	volatile	uint32_t	shadow_sub_seconds_uptime;								//Give sub_seconds value. This will only return uptime at subseconds
+	volatile 	uint8_t		VariablesSync;
+	
+}sw_timebase_time_t;
+
+
+typedef struct sw_timebase_counter_t{
+	
+	sw_timebase_status_t status;
+	uint32_t	end_value;
+	uint32_t	value;
+	uint32_t	period_value;
+	uint32_t	reload_value;
+	uint32_t	target;
+	uint32_t	temporary;
+	
+}sw_timebase_counter_t;
+
+
+
+
+typedef struct sw_timebase_t{
+	
+	sw_timebase_config_t sw_config;
+	sw_timebase_time_t	sw_time;
+	uint8_t	updateReq;
+	
+	sw_timebase_counter_t sw_counter[TIMEBASE_COUNTER];
+	
+}sw_timebase_t;
+
+
+enum{
+  COUNTER_UPDATE_REQ      	=  0x01,
+  UPCOUNTER_SS_UPDATE_REQ   =  0x02,
+
+};
+
+
+enum{
+	
+	TIMER_VARIABLE_SYNC_TRUE				=		0x01,
+	TIMER_VARIABLE_SYNC_FALSE				=		0x00,
+	
+};
+
+
+
+enum{
+  COUNTER_STATE_RESET       = 0,
+  COUNTER_STATE_START       = 1,
+  COUNTER_STATE_STARTED     = 1,
+  COUNTER_STATE_STOP        = 2,
+  COUNTER_STATE_STOPPED     = 2,
+  COUNTER_STATE_EXPIRED     = 4
+};
+
+
+
+enum{
+  FLAG_STATE_RESET          = 0,
+  FLAG_STATE_SET            = 1,
+};
+
+
+sw_timebase_t		sw_timebase_type;
+sw_timebase_t*	sw_timebase;
+
+
+void sw_timebase_struct_init(void){
+	
+	sw_timebase = &sw_timebase_type;
+	sw_timebase->sw_config.UpdateRate = 1;
+	sw_timebase->updateReq = 0;
+	sw_timebase->sw_time.seconds = 0;
+	sw_timebase->sw_time.shadow_seconds	= 0;
+	sw_timebase->sw_time.shadow_subseconds	=	0;
+	sw_timebase->sw_time.shadow_sub_seconds_uptime = 0;
+	sw_timebase->sw_time.sub_seconds = 0;
+	sw_timebase->sw_time.VariablesSync = TIMER_VARIABLE_SYNC_FALSE;
+	
+	for( uint8_t i = 0; i < TIMEBASE_COUNTER; i++){
+		
+		sw_timebase->sw_counter[i].status.StatusByte = 0;
+	}
+	
+}
+
+
+void sw_timebase_enable(uint32_t UpdateHz){
+	
+		RCC->APBENR2|=RCC_APBENR2_TIM17EN;
+		TIM17->CR1|=TIM_CR1_ARPE;
+		TIM17->PSC=15;									//16MHz is used
+		TIM17->ARR=(1000000/UpdateHz) - 1;
+		TIM17->DIER|=TIM_DIER_UIE;
+		NVIC_SetPriority(TIM17_IRQn, 0);
+		NVIC_EnableIRQ(TIM17_IRQn);
+		TIM17->CR1|=TIM_CR1_CEN;
+		//Timebase->Config.UpdateRate=UpdateHz;
+}
+
+
+void sw_timebase_Init(uint32_t UpdateHz){
+	
+	sw_timebase_struct_init();
+	sw_timebase_enable(UpdateHz);
+	
+}
+
+void sw_timebase_disable(uint8_t timer_num){
+	
+	
+}
+
+
+
+void sw_hardware_timer_disable(void)
+{
+    TIM17->CR1 &= ~TIM_CR1_CEN;    // Disable counter
+}
+
+void sw_hardware_timer_reset(void)
+{
+    TIM17->CNT = 0;                // Reset counter value
+    TIM17->SR &= ~TIM_SR_UIF;      // Clear update interrupt flag
+}
+
+void sw_hardware_timer_interrupt_enable(void)
+{
+    TIM17->DIER |= TIM_DIER_UIE;   // Enable update interrupt
+    NVIC_EnableIRQ(TIM17_IRQn);    // Enable interrupt in NVIC
+}
+
+void sw_hardware_timer_interrupt_disable(void)
+{
+    TIM17->DIER &= ~TIM_DIER_UIE;  // Disable update interrupt
+    NVIC_DisableIRQ(TIM17_IRQn);   // Disable NVIC interrupt
+}
+
+
+
+
+
+/********************************Atomic Functions Start*******************************/
+
+
+void sw_timebase_atomic_operation_start(void){
+  __disable_irq();
+}
+
+
+void sw_timebase_atomic_operation_end(void){
+  __enable_irq();
+}
+
+
+/***********************************Timer ISR Start**********************************/
+
+void TIM17_IRQHandler(void){
+	
+	if (TIM17->SR & TIM_SR_UIF) {
+        TIM17->SR &= ~TIM_SR_UIF;   // Clear flag immediately
+    }
+	
+  sw_timebase_ISR_executables();
+	
+}
+
+
+void sw_timebase_ISR_executables(void){
+	
+	sw_timebase->sw_time.shadow_subseconds++;
+	sw_timebase->sw_time.shadow_sub_seconds_uptime++;
+	
+	if(sw_timebase->sw_time.shadow_subseconds > sw_timebase->sw_config.UpdateRate){
+		
+		sw_timebase->sw_time.shadow_subseconds = 0;
+		sw_timebase->sw_time.shadow_seconds++;
+		
+	}
+	
+	sw_timebase->updateReq	|= COUNTER_UPDATE_REQ;
+	
+}
+
+
+/*****************************Base Timer Functions Start*****************************/
+
+uint16_t sw_timebase_get_sub_seconds(void) {
+    return sw_timebase->sw_time.sub_seconds;
+}
+
+uint16_t sw_timebase_get_shadow_sub_seconds(void) {
+    return sw_timebase->sw_time.shadow_subseconds;
+}
+
+uint32_t sw_timebase_get_seconds(void) {
+    return sw_timebase->sw_time.seconds;
+}
+
+uint32_t sw_timebase_get_shadow_seconds(void) {
+    return sw_timebase->sw_time.shadow_seconds;
+}
+
+uint32_t sw_timebase_get_shadow_sub_seconds_uptime(void) {
+    return sw_timebase->sw_time.shadow_sub_seconds_uptime;
+}
+
+
+
+void sw_timebase_set_sub_seconds(uint16_t value){
+		sw_timebase->sw_time.sub_seconds = value;
+	
+}
+
+
+void sw_timebase_set_shadow_sub_seconds(uint16_t value){
+	sw_timebase_atomic_operation_start();
+	sw_timebase->sw_time.shadow_subseconds = value;
+	sw_timebase_atomic_operation_end();
+	
+}
+
+void sw_timebase_set_seconds(uint32_t value){
+		sw_timebase->sw_time.seconds = value;
+	
+}
+
+void sw_timebase_set_shadow_seconds(uint32_t value){
+	sw_timebase_atomic_operation_start();
+	sw_timebase->sw_time.shadow_seconds = value;
+	sw_timebase_atomic_operation_end();
+	
+}
+
+void sw_timebase_set_shadow_sub_seconds_uptime(uint32_t value){
+	sw_timebase_atomic_operation_start();
+	sw_timebase->sw_time.shadow_sub_seconds_uptime = value;
+	sw_timebase_atomic_operation_end();
+	
+}
+
+
+
+uint16_t sw_timebase_get_shadow_sub_seconds_securely(void) {
+    uint32_t tmp0, tmp1;
+    while (1) {
+        tmp0 = sw_timebase->sw_time.shadow_subseconds;
+        tmp1 = sw_timebase->sw_time.shadow_subseconds;
+        if (tmp0 == tmp1) break;
+    }
+    return tmp0;
+}
+
+
+uint32_t sw_timebase_get_shadow_seconds_securely(void) {
+    uint32_t tmp0, tmp1;
+    while (1) {
+        tmp0 = sw_timebase->sw_time.shadow_seconds;
+        tmp1 = sw_timebase->sw_time.shadow_seconds;
+        if (tmp0 == tmp1) break;
+    }
+    return tmp0;
+}
+
+
+
+uint32_t sw_timebase_get_shadow_sub_seconds_uptime_securely(void) {
+    uint32_t tmp0, tmp1;
+    while (1) {
+        tmp0 = sw_timebase->sw_time.shadow_sub_seconds_uptime;
+        tmp1 = sw_timebase->sw_time.shadow_sub_seconds_uptime;
+        if (tmp0 == tmp1) break;
+    }
+    return tmp0;
+}
+
+
+/***********************************Counter part**********************************/
+
+// --- STATUS FUNCTIONS ---
+uint8_t sw_timebase_counter_get_status(uint8_t index) {
+    return sw_timebase->sw_counter[index].status.Value;
+}
+
+void sw_timebase_counter_set_status(uint8_t index, uint8_t value) {
+    sw_timebase->sw_counter[index].status.Value = value; // 4-bit mask
+}
+
+uint8_t sw_timebase_counter_get_period_status_flag(uint8_t index) {
+    return sw_timebase->sw_counter[index].status.PeriodFlag;
+}
+
+void sw_timebase_counter_set_period_status_flag(uint8_t index, uint8_t value) {
+    sw_timebase->sw_counter[index].status.PeriodFlag = (value != 0) ? 1 : 0;
+}
+
+void sw_timebase_counter_reset_period_status_flag(uint8_t index) {
+    sw_timebase->sw_counter[index].status.PeriodFlag = 0;
+}
+
+// --- VALUE FUNCTIONS ---
+uint32_t sw_timebase_counter_get_current_value(uint8_t index) {
+    return sw_timebase->sw_counter[index].value;
+}
+
+void sw_timebase_counter_set_current_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter[index].value = value;
+}
+
+uint32_t sw_timebase_counter_get_end_value(uint8_t index) {
+    return sw_timebase->sw_counter[index].end_value;
+}
+
+void sw_timebase_counter_set_end_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter[index].end_value = value;
+}
+
+uint32_t sw_timebase_counter_get_period_value(uint8_t index) {
+    return sw_timebase->sw_counter[index].period_value;
+}
+
+void sw_timebase_counter_set_period_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter[index].period_value = value;
+}
+
+uint32_t sw_timebase_counter_get_reload_value(uint8_t index) {
+    return sw_timebase->sw_counter[index].reload_value;
+}
+
+void sw_timebase_counter_set_reload_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter[index].reload_value = value;
+}
+
+uint32_t sw_timebase_counter_get_target_value(uint8_t index) {
+    return sw_timebase->sw_counter[index].target;
+}
+
+void sw_timebase_counter_set_target_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter[index].target = value;
+}
+
+uint32_t sw_timebase_counter_get_temporary_value(uint8_t index) {
+    return sw_timebase->sw_counter[index].temporary;
+}
+
+void sw_timebase_counter_set_temporary_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter[index].temporary = value;
+}
+
+
+void sw_timebase_counter_reset(uint8_t index){
+		
+		sw_timebase_counter_set_status(index,COUNTER_STATE_RESET);
+		sw_timebase_counter_set_temporary_value(index,0);
+		sw_timebase_counter_set_target_value(index,0);
+		sw_timebase_counter_set_reload_value(index,0);
+		sw_timebase_counter_set_period_value(index,0);
+		sw_timebase_counter_set_end_value(index,0);
+		sw_timebase_counter_set_current_value(index,0);
+		sw_timebase_counter_reset_period_status_flag(index);
+	
+	
+}
+
+void sw_timebase_counter_reset_flag(uint8_t	index){
+	
+}
+
+
+void sw_timebase_counter_start(uint8_t	index){
+	
+	
+}
+
+
+
+
+
+
+/************************************************************************************/
+
+void sw_timebase_main_loop_executable(void){
+	
+	
+	if(sw_timebase->updateReq & COUNTER_UPDATE_REQ){
+		
+			//Update ALL timer
+		sw_timebase_variable_sync();
+		sw_timebase_counter_update_all();
+		sw_timebase->updateReq &= ~ COUNTER_UPDATE_REQ;
+	}
+	
+	sw_timebase->sw_time.VariablesSync = TIMER_VARIABLE_SYNC_FALSE;
+	
+}
+
+
+
+void sw_timebase_variable_sync(void){
+	
+	if(sw_timebase->sw_time.VariablesSync == TIMER_VARIABLE_SYNC_FALSE){
+		
+		sw_timebase_atomic_operation_start();
+		sw_timebase->sw_time.sub_seconds = sw_timebase->sw_time.shadow_subseconds;
+		sw_timebase->sw_time.seconds = sw_timebase->sw_time.shadow_seconds;
+		sw_timebase_atomic_operation_end();
+		sw_timebase->sw_time.VariablesSync = TIMER_VARIABLE_SYNC_TRUE;
+	}
+		
+}
+

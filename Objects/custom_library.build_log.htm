@@ -8,7 +8,7 @@ Copyright (C) 2023 ARM Ltd and ARM Germany GmbH. All rights reserved.
 License Information: de ee
 ee
 User-based license: Keil MDK Community (non-commercial free of charge)
-Valid until: Jun 1 2033. Cached until: Nov 3 2025
+Valid until: Jun 1 2033. Cached until: Nov 6 2025
  
 Tool Versions:
 Toolchain:       Keil MDK Community (non-commercial free of charge  Version: 5.39.0.0
@@ -20,58 +20,235 @@ Library Manager: ArmAr.exe V6.21
 Hex Converter:   FromElf.exe V6.21
 CPU DLL:         SARMCM3.DLL V5.39.0.0
 Dialog DLL:      DARMCM1.DLL V1.19.6.0
-Target DLL:      UL2CM3.DLL V1.164.9.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.2.0.0
 Dialog DLL:      TARMCM1.DLL V1.14.6.0
  
 <h2>Project:</h2>
 E:\stm32g030f6p6_custom_library\custom_library.uvprojx
-Project File Date:  10/28/2025
+Project File Date:  10/29/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'stm32g030f6p6'
-flash.c(1): warning: In file included from...
-./flash.h(17): warning: no newline at end of file [-Wnewline-eof]
-   17 | #endif
-      |       ^
-1 warning generated.
-compiling flash.c...
-app.c(2): warning: In file included from...
-./app.h(4): warning: no newline at end of file [-Wnewline-eof]
-    4 | void App_Main_Loop(void);
-      |                          ^
-app.c(13): warning: no previous extern declaration for non-static variable 'fw_crc' [-Wmissing-variable-declarations]
-   13 | uint32_t fw_crc;
-      |          ^
-app.c(13): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-   13 | uint32_t fw_crc;
-      | ^
-2 warnings generated.
-compiling app.c...
-main.c(2): warning: In file included from...
-./app.h(4): warning: no newline at end of file [-Wnewline-eof]
-    4 | void App_Main_Loop(void);
-      |                          ^
-1 warning generated.
-compiling main.c...
-compiling gpio.c...
-crc.c(38): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
-   38 |     uint32_t endAddr = startAddr + length;
-      |              ^
-crc.c(24): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-   24 |         CRC->DR = data[i];
-      |                   ^~~~
-2 warnings generated.
-compiling crc.c...
 assembling startup_stm32g030xx.s...
+compiling gpio.c...
+compiling main.c...
 RTE/Device/STM32G030F6Px/system_stm32g0xx.c(286): warning: unsafe buffer access [-Wunsafe-buffer-usage]
   286 |   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos)];
       |         ^~~~~~~~~~~~~
 1 warning generated.
 compiling system_stm32g0xx.c...
+compiling flash.c...
+crc32.c(42): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+   42 |     uint32_t endAddr = startAddr + length;
+      |              ^
+crc32.c(28): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+   28 |         CRC->DR = data[i];
+      |                   ^~~~
+2 warnings generated.
+compiling crc32.c...
+app.c(18): warning: no previous prototype for function 'LED_Blink_Callback' [-Wmissing-prototypes]
+   18 | void LED_Blink_Callback(void *arg)
+      |      ^
+app.c(18): note: declare 'static' if the function is not intended to be used outside of this translation unit
+   18 | void LED_Blink_Callback(void *arg)
+      | ^
+      | static 
+app.c(14): warning: no previous extern declaration for non-static variable 't1' [-Wmissing-variable-declarations]
+   14 | uint8_t t1, t2;
+      |         ^
+app.c(14): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   14 | uint8_t t1, t2;
+      | ^
+app.c(14): warning: no previous extern declaration for non-static variable 't2' [-Wmissing-variable-declarations]
+   14 | uint8_t t1, t2;
+      |             ^
+app.c(14): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+   14 | uint8_t t1, t2;
+      | ^
+3 warnings generated.
+compiling app.c...
+timebase.c(47): warning: anonymous structs are a C11 extension [-Wc11-extensions]
+   47 |   struct {
+      |   ^
+timebase.c(47): warning: padding size of 'struct (anonymous at timebase.c:47:3)' with 3 bits to alignment boundary [-Wpadded]
+timebase.c(90): warning: padding struct 'struct timebase_downcounter_ss_t' with 3 bytes to align 'EndValueSec' [-Wpadded]
+   90 |   int32_t                 EndValueSec        ;
+      |                           ^
+timebase.c(104): warning: padding struct 'struct timebase_downcounter_t' with 3 bytes to align 'EndValue' [-Wpadded]
+  104 |   int32_t                   EndValue         ;
+      |                             ^
+timebase.c(23): warning: padding struct 'struct timebase_time_t' with 2 bytes to align 'LastSample' [-Wpadded]
+   23 |   volatile int32_t         LastSample         ;
+      |                            ^
+timebase.c(25): warning: padding struct 'struct timebase_time_t' with 2 bytes to align 'Seconds' [-Wpadded]
+   25 |   volatile int32_t         Seconds            ;
+      |                            ^
+timebase.c(27): warning: padding struct 'struct timebase_time_t' with 2 bytes to align 'SubSecondsUpTime' [-Wpadded]
+   27 |         volatile uint32_t        SubSecondsUpTime   ;
+      |                                  ^
+timebase.c(32): warning: padding struct 'struct timebase_time_t' with 3 bytes to align 'StartTimeSeconds' [-Wpadded]
+   32 |   int32_t                  StartTimeSeconds   ;
+      |                            ^
+timebase.c(21): warning: padding size of 'struct timebase_time_t' with 3 bytes to alignment boundary [-Wpadded]
+   21 | typedef struct timebase_time_t{
+      |                ^
+timebase.c(124): warning: padding struct 'struct timebase_t' with 2 bytes to align 'Time' [-Wpadded]
+  124 |   timebase_time_t        Time                ;
+      |                          ^
+timebase.c(140): warning: padding struct 'struct timebase_t' with 3 bytes to align 'DownCounterSS' [-Wpadded]
+  140 |   timebase_downcounter_ss_t DownCounterSS[TIMEBASE_DOWNCOUNTER_SUBSECONDS] ;
+      |                             ^
+timebase.c(371): warning: no previous prototype for function 'TIM17_IRQHandler' [-Wmissing-prototypes]
+  371 | void TIM17_IRQHandler(void){
+      |      ^
+timebase.c(371): note: declare 'static' if the function is not intended to be used outside of this translation unit
+  371 | void TIM17_IRQHandler(void){
+      | ^
+      | static 
+timebase.c(2202): warning: no newline at end of file [-Wnewline-eof]
+ 2202 | /********************************Common Functions End*******************************/
+      |                                                                                      ^
+timebase.c(191): warning: no previous extern declaration for non-static variable 'Timebase_type' [-Wmissing-variable-declarations]
+  191 | timebase_t Timebase_type;
+      |            ^
+timebase.c(191): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+  191 | timebase_t Timebase_type;
+      | ^
+timebase.c(192): warning: no previous extern declaration for non-static variable 'Timebase' [-Wmissing-variable-declarations]
+  192 | timebase_t *Timebase;
+      |             ^
+timebase.c(192): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+  192 | timebase_t *Timebase;
+      | ^
+timebase.c(263): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  263 |     Timebase->DownCounter[i].Status.StatusByte = 0; 
+      |     ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(264): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  264 |     Timebase->DownCounter[i].EndValue = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(265): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  265 |     Timebase->DownCounter[i].Value = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(266): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  266 |     Timebase->DownCounter[i].PeriodValue = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(267): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  267 |           Timebase->DownCounter[i].ReloadValue = 0;
+      |           ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(273): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  273 |     Timebase->DownCounterSS[i].Status.StatusByte = 0; 
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(274): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  274 |     Timebase->DownCounterSS[i].EndValueSec = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(275): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  275 |           Timebase->DownCounterSS[i].EndValueSubSec = 0;
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(276): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  276 |     Timebase->DownCounterSS[i].Value = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(277): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  277 |     Timebase->DownCounterSS[i].PeriodValue = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(278): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  278 |           Timebase->DownCounterSS[i].ReloadValue = 0;
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1366): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1366 |   return Timebase->DownCounterSS[window].Status.Value;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1371): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1371 |   Timebase->DownCounterSS[window].Status.Value = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1376): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1376 |   return Timebase->DownCounterSS[window].Value;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1381): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1381 |   Timebase->DownCounterSS[window].Value = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1386): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1386 |   return Timebase->DownCounterSS[window].EndValueSec;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1391): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1391 |   return Timebase->DownCounterSS[window].EndValueSubSec;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1396): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1396 |   Timebase->DownCounterSS[window].EndValueSec = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1401): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1401 |   Timebase->DownCounterSS[window].EndValueSubSec = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1406): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1406 |   return Timebase->DownCounterSS[window].PeriodValue;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1412): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1412 |     Timebase->DownCounterSS[window].PeriodValue = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1414): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1414 |     Timebase->DownCounterSS[window].PeriodValue = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1420): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1420 |   return Timebase->DownCounterSS[window].Status.PeriodFlag;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1425): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1425 |   Timebase->DownCounterSS[window].Status.PeriodFlag = FLAG_STATE_SET;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1430): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1430 |   Timebase->DownCounterSS[window].Status.PeriodFlag = FLAG_STATE_RESET;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1434): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1434 |   return Timebase->DownCounterSS[window].ReloadValue;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1438): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1438 |   Timebase->DownCounterSS[window].ReloadValue = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~
+timebase.c(1629): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1629 |   return Timebase->DownCounter[window].Status.Value;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1634): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1634 |   Timebase->DownCounter[window].Status.Value = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1639): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1639 |   return Timebase->DownCounter[window].Value;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1644): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1644 |   Timebase->DownCounter[window].Value = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1649): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1649 |   return Timebase->DownCounter[window].EndValue;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1654): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1654 |   Timebase->DownCounter[window].EndValue = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1659): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1659 |   return Timebase->DownCounter[window].PeriodValue;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1665): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1665 |     Timebase->DownCounter[window].PeriodValue = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1667): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1667 |     Timebase->DownCounter[window].PeriodValue = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1673): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1673 |   return Timebase->DownCounter[window].Status.PeriodFlag;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1678): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1678 |   Timebase->DownCounter[window].Status.PeriodFlag = FLAG_STATE_SET;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1683): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1683 |   Timebase->DownCounter[window].Status.PeriodFlag = FLAG_STATE_RESET;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1687): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1687 |   return Timebase->DownCounter[window].ReloadValue;
+      |          ^~~~~~~~~~~~~~~~~~~~~
+timebase.c(1691): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+ 1691 |   Timebase->DownCounter[window].ReloadValue = value;
+      |   ^~~~~~~~~~~~~~~~~~~~~
+56 warnings generated.
+compiling timebase.c...
 linking...
-Program Size: Code=652 RO-data=208 RW-data=0 ZI-data=1632  
-".\Objects\custom_library.axf" - 0 Error(s), 7 Warning(s).
+Program Size: Code=3768 RO-data=208 RW-data=0 ZI-data=2432  
+".\Objects\custom_library.axf" - 0 Error(s), 62 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -97,12 +274,12 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE@5.6.0
 
    * Component: Keil::Device:Startup@1.4.2
-      Source file:   MDK/Device/Source/ARM/STM32G0x0_SB_OPT.s
       Source file:   MDK/Device/Source/ARM/STM32G0x0_DB_OPT.s
-      Include file:  Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g0xx.h
       Source file:   Drivers/CMSIS/Device/ST/STM32G0xx/Source/Templates/arm/startup_stm32g030xx.s
+      Include file:  Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g0xx.h
+      Source file:   MDK/Device/Source/ARM/STM32G0x0_SB_OPT.s
       Source file:   Drivers/CMSIS/Device/ST/STM32G0xx/Source/Templates/system_stm32g0xx.c
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

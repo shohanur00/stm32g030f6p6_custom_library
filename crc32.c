@@ -1,4 +1,4 @@
-#include "crc.h"
+#include "crc32.h"
 
 /**
  * @brief Initialize hardware CRC peripheral.
@@ -15,11 +15,15 @@ void CRC32_Init(void)
 /**
  * @brief Calculate CRC32 for a buffer (word-aligned).
  */
-uint32_t CRC32_Calculate(uint32_t *data, uint32_t length)
+
+uint32_t CRC32_Calculate(const uint32_t *data, size_t length)
 {
     CRC32_Init();
 
-    for (uint32_t i = 0; i < length; i++)
+    if (data == NULL || length == 0)
+        return 0;   // simple safety guard
+
+    for (size_t i = 0; i < length; i++)
     {
         CRC->DR = data[i];
     }
