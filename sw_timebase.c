@@ -394,7 +394,7 @@ void sw_timebase_counter_reset(uint8_t index){
 }
 
 void sw_timebase_counter_reset_flag(uint8_t	index){
-	
+		sw_timebase_counter_reset(index);
 }
 
 
