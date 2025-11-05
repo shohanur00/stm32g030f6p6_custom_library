@@ -451,7 +451,11 @@ void sw_timebase_counter_update(uint8_t index){
 	else if(sw_timebase_counter_get_status(index) == COUNTER_STATE_STOPPED){
 			curr_state_value = sw_timebase_get_seconds();
 			sw_timebase_counter_set_end_value(index,curr_state_value+sw_timebase_counter_get_temporary_value(index));
-			sw_timebase_counter_set_current_value(index,sw_timebase_counter_get_target_value(index) - sw_timebase_counter_get_temporary_value(index));
+			if (sw_timebase_counter_get_current_value(index) !=(sw_timebase_counter_get_target_value(index) - sw_timebase_counter_get_temporary_value(index))) {
+        
+				sw_timebase_counter_set_current_value(index,sw_timebase_counter_get_target_value(index) - sw_timebase_counter_get_temporary_value(index));
+			
+			}
 	}
 }
 
