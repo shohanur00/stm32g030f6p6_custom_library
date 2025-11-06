@@ -25,18 +25,18 @@ uint16_t sw_timebase_get_sub_seconds(void);
 uint16_t sw_timebase_get_shadow_sub_seconds(void);
 uint32_t sw_timebase_get_seconds(void);
 uint32_t sw_timebase_get_shadow_seconds(void);
-uint32_t sw_timebase_get_shadow_sub_seconds_uptime(void);
+uint64_t sw_timebase_get_shadow_sub_seconds_uptime(void);
 
 void sw_timebase_set_sub_seconds(uint16_t value);
 void sw_timebase_set_shadow_sub_seconds(uint16_t value);
 void sw_timebase_set_seconds(uint32_t value);
 void sw_timebase_set_shadow_seconds(uint32_t value);
-void sw_timebase_set_shadow_sub_seconds_uptime(uint32_t value);
+void sw_timebase_set_shadow_sub_seconds_uptime(uint64_t value);
 
 
 uint16_t sw_timebase_get_shadow_sub_seconds_securely(void);
 uint32_t sw_timebase_get_shadow_seconds_securely(void);
-uint32_t sw_timebase_get_shadow_sub_seconds_uptime_securely(void);
+uint64_t sw_timebase_get_shadow_sub_seconds_uptime_securely(void);
 
 
 

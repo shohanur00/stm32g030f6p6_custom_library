@@ -414,6 +414,11 @@
               <FileType>1</FileType>
               <FilePath>.\sw_timebase.c</FilePath>
             </File>
+            <File>
+              <FileName>debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\debug.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -443,6 +448,11 @@
               <FileName>sw_timebase.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\sw_timebase.h</FilePath>
+            </File>
+            <File>
+              <FileName>debug.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\debug.h</FilePath>
             </File>
           </Files>
         </Group>

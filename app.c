@@ -3,6 +3,7 @@
 #include "crc32.h"
 #include "gpio.h"
 #include "sw_timebase.h"
+#include "debug.h"
 //#include "timebase.h"
 
 
@@ -24,11 +25,13 @@ void App_Setup(void){
 	GPIO_Init(GPIOA,6,GPIO_MODE_OUTPUT,GPIO_OTYPE_PP,GPIO_NOPULL,GPIO_SPEED_LOW);
 	GPIO_SetPin(GPIOA,4);
 	GPIO_SetPin(GPIOA,6);
+	Debug_Init(38400);
 	sw_timebase_Init(1000);
 	//Timebase_Init(1000); // ????? 1ms interrupt
 	//Timebase_DownCounter_Set_Securely(0, 1); // 5 sec
 	//Timebase_DownCounter_Set_Securely(1, 2); // 5 sec
 	sw_timebase_counter_ss_set_securely(0,2000);
+	sw_timebase_counter_ss_set_securely(1,500);
 	sw_timebase_counter_ss_set_period_value_securely(0,200);
 	//sw_timebase_counter_set_securely(1,2);
 	
@@ -49,6 +52,10 @@ void App_Main_Loop(void){
 				//sw_timebase_counter_set_forcefully(0,1);
 				//Timebase_DownCounter_Set_Forcefully(0, 1);
 		sw_timebase_counter_ss_set_period_value_securely(0,200);
+	}
+	
+	if (sw_timebase_counter_ss_continous_expired_event(1)){
+		Debug_Tx_Parameter_NL("UpTime",sw_timebase_get_shadow_sub_seconds_uptime_securely());
 	}
 
   /*  if (sw_timebase_counter_continous_expired_event(1)){

@@ -27,7 +27,7 @@ typedef struct sw_timebase_time_t{
 	volatile 	uint32_t	seconds;																	//This will change at main loop
 	volatile	uint16_t	shadow_subseconds;												//This will change during interrupt happen
 	volatile	uint32_t	shadow_seconds; 													//This will change during interrupt happen
-	volatile	uint32_t	shadow_sub_seconds_uptime;								//Give sub_seconds value. This will only return uptime at subseconds
+	volatile	uint64_t	shadow_sub_seconds_uptime;								//Give sub_seconds value. This will only return uptime at subseconds
 	volatile 	uint8_t		VariablesSync;
 	
 }sw_timebase_time_t;
@@ -270,7 +270,7 @@ uint32_t sw_timebase_get_shadow_seconds(void) {
     return sw_timebase->sw_time.shadow_seconds;
 }
 
-uint32_t sw_timebase_get_shadow_sub_seconds_uptime(void) {
+uint64_t sw_timebase_get_shadow_sub_seconds_uptime(void) {
     return sw_timebase->sw_time.shadow_sub_seconds_uptime;
 }
 
@@ -301,7 +301,7 @@ void sw_timebase_set_shadow_seconds(uint32_t value){
 	
 }
 
-void sw_timebase_set_shadow_sub_seconds_uptime(uint32_t value){
+void sw_timebase_set_shadow_sub_seconds_uptime(uint64_t value){
 	sw_timebase_atomic_operation_start();
 	sw_timebase->sw_time.shadow_sub_seconds_uptime = value;
 	sw_timebase_atomic_operation_end();
@@ -333,8 +333,8 @@ uint32_t sw_timebase_get_shadow_seconds_securely(void) {
 
 
 
-uint32_t sw_timebase_get_shadow_sub_seconds_uptime_securely(void) {
-    uint32_t tmp0, tmp1;
+uint64_t sw_timebase_get_shadow_sub_seconds_uptime_securely(void) {
+    uint64_t tmp0, tmp1;
     while (1) {
         tmp0 = sw_timebase->sw_time.shadow_sub_seconds_uptime;
         tmp1 = sw_timebase->sw_time.shadow_sub_seconds_uptime;
