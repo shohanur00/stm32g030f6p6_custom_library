@@ -30,29 +30,19 @@ Project File Date:  11/06/2025
 <h2>Output:</h2>
 *** Using Compiler 'V6.21', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Rebuild target 'stm32g030f6p6'
-compiling main.c...
-compiling flash.c...
-compiling app.c...
-RTE/Device/STM32G030F6Px/system_stm32g0xx.c(286): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  286 |   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos)];
-      |         ^~~~~~~~~~~~~
-1 warning generated.
-compiling system_stm32g0xx.c...
-crc32.c(42): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
-   42 |     uint32_t endAddr = startAddr + length;
-      |              ^
-crc32.c(28): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-   28 |         CRC->DR = data[i];
-      |                   ^~~~
-2 warnings generated.
-compiling crc32.c...
-compiling gpio.c...
 assembling startup_stm32g030xx.s...
+compiling app.c...
+compiling flash.c...
+compiling gpio.c...
+compiling main.c...
 sw_timebase.c(7): warning: anonymous structs are a C11 extension [-Wc11-extensions]
     7 |   struct {
       |   ^
 sw_timebase.c(39): warning: padding struct 'struct sw_timebase_counter_t' with 3 bytes to align 'end_value' [-Wpadded]
    39 |         uint32_t        end_value;
+      |                         ^
+sw_timebase.c(51): warning: padding struct 'struct sw_timebase_counter_ss_t' with 3 bytes to align 'end_value' [-Wpadded]
+   51 |         uint32_t        end_value;
       |                         ^
 sw_timebase.c(27): warning: padding struct 'struct sw_timebase_time_t' with 2 bytes to align 'seconds' [-Wpadded]
    27 |         volatile        uint32_t        seconds;                                                                                                                                        //This will change at main loop
@@ -63,90 +53,211 @@ sw_timebase.c(29): warning: padding struct 'struct sw_timebase_time_t' with 2 by
 sw_timebase.c(24): warning: padding size of 'struct sw_timebase_time_t' with 3 bytes to alignment boundary [-Wpadded]
    24 | typedef struct sw_timebase_time_t{
       |                ^
-sw_timebase.c(57): warning: padding struct 'struct sw_timebase_t' with 3 bytes to align 'sw_counter' [-Wpadded]
-   57 |         sw_timebase_counter_t sw_counter[TIMEBASE_COUNTER];
+sw_timebase.c(69): warning: padding struct 'struct sw_timebase_t' with 3 bytes to align 'sw_counter' [-Wpadded]
+   69 |         sw_timebase_counter_t sw_counter[TIMEBASE_COUNTER];
       |                               ^
-sw_timebase.c(146): warning: unused parameter 'timer_num' [-Wunused-parameter]
-  146 | void sw_timebase_disable(uint8_t timer_num){
+sw_timebase.c(178): warning: unused parameter 'timer_num' [-Wunused-parameter]
+  178 | void sw_timebase_disable(uint8_t timer_num){
       |                                  ^
-sw_timebase.c(195): warning: no previous prototype for function 'TIM17_IRQHandler' [-Wmissing-prototypes]
-  195 | void TIM17_IRQHandler(void){
+sw_timebase.c(227): warning: no previous prototype for function 'TIM17_IRQHandler' [-Wmissing-prototypes]
+  227 | void TIM17_IRQHandler(void){
       |      ^
-sw_timebase.c(195): note: declare 'static' if the function is not intended to be used outside of this translation unit
-  195 | void TIM17_IRQHandler(void){
+sw_timebase.c(227): note: declare 'static' if the function is not intended to be used outside of this translation unit
+  227 | void TIM17_IRQHandler(void){
       | ^
       | static 
-sw_timebase.c(101): warning: no previous extern declaration for non-static variable 'sw_timebase_type' [-Wmissing-variable-declarations]
-  101 | sw_timebase_t           sw_timebase_type;
+sw_timebase.c(552): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  552 |         uint32_t next_period = curr + value;
+      |                  ^
+sw_timebase.c(574): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  574 |     int32_t temp = (int32_t)(period - curr);
+      |             ^
+sw_timebase.c(877): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  877 |         uint32_t next_period = curr + value;
+      |                  ^
+sw_timebase.c(892): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+  892 |     int32_t temp = (int32_t)(period - curr);
+      |             ^
+sw_timebase.c(114): warning: no previous extern declaration for non-static variable 'sw_timebase_type' [-Wmissing-variable-declarations]
+  114 | sw_timebase_t           sw_timebase_type;
       |                         ^
-sw_timebase.c(101): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-  101 | sw_timebase_t           sw_timebase_type;
+sw_timebase.c(114): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+  114 | sw_timebase_t           sw_timebase_type;
       | ^
-sw_timebase.c(102): warning: no previous extern declaration for non-static variable 'sw_timebase' [-Wmissing-variable-declarations]
-  102 | sw_timebase_t*  sw_timebase;
+sw_timebase.c(115): warning: no previous extern declaration for non-static variable 'sw_timebase' [-Wmissing-variable-declarations]
+  115 | sw_timebase_t*  sw_timebase;
       |                 ^
-sw_timebase.c(102): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-  102 | sw_timebase_t*  sw_timebase;
+sw_timebase.c(115): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+  115 | sw_timebase_t*  sw_timebase;
       | ^
-sw_timebase.c(119): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  119 |                 sw_timebase->sw_counter[i].status.StatusByte = 0;
+sw_timebase.c(132): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  132 |                 sw_timebase->sw_counter[i].status.StatusByte = 0;
       |                 ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(319): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  319 |     return sw_timebase->sw_counter[index].status.Value;
+sw_timebase.c(133): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  133 |                 sw_timebase->sw_counter[i].end_value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(134): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  134 |                 sw_timebase->sw_counter[i].value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(135): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  135 |                 sw_timebase->sw_counter[i].period_value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(136): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  136 |                 sw_timebase->sw_counter[i].reload_value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(137): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  137 |                 sw_timebase->sw_counter[i].target = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(138): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  138 |                 sw_timebase->sw_counter[i].temporary = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(144): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  144 |                 sw_timebase->sw_counter_ss[i].status.StatusByte = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(145): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  145 |                 sw_timebase->sw_counter_ss[i].end_value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(146): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  146 |                 sw_timebase->sw_counter_ss[i].value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(147): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  147 |                 sw_timebase->sw_counter_ss[i].period_value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(148): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  148 |                 sw_timebase->sw_counter_ss[i].reload_value = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(149): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  149 |                 sw_timebase->sw_counter_ss[i].target = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(150): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  150 |                 sw_timebase->sw_counter_ss[i].temporary = 0;
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(351): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  351 |     return sw_timebase->sw_counter[index].status.Value;
       |            ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(323): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  323 |     sw_timebase->sw_counter[index].status.Value = value; // 4-bit mask
+sw_timebase.c(355): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  355 |     sw_timebase->sw_counter[index].status.Value = value; // 4-bit mask
       |     ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(327): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  327 |     return sw_timebase->sw_counter[index].status.PeriodFlag;
+sw_timebase.c(359): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  359 |     return sw_timebase->sw_counter[index].status.PeriodFlag;
       |            ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(331): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  331 |     sw_timebase->sw_counter[index].status.PeriodFlag = (value != 0) ? 1 : 0;
+sw_timebase.c(363): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  363 |     sw_timebase->sw_counter[index].status.PeriodFlag = (value != 0) ? 1 : 0;
       |     ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(335): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  335 |     sw_timebase->sw_counter[index].status.PeriodFlag = 0;
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(340): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  340 |     return sw_timebase->sw_counter[index].value;
-      |            ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(344): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  344 |     sw_timebase->sw_counter[index].value = value;
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(348): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  348 |     return sw_timebase->sw_counter[index].end_value;
-      |            ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(352): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  352 |     sw_timebase->sw_counter[index].end_value = value;
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(356): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  356 |     return sw_timebase->sw_counter[index].period_value;
-      |            ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(360): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  360 |     sw_timebase->sw_counter[index].period_value = value;
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(364): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  364 |     return sw_timebase->sw_counter[index].reload_value;
-      |            ^~~~~~~~~~~~~~~~~~~~~~~
-sw_timebase.c(368): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  368 |     sw_timebase->sw_counter[index].reload_value = value;
+sw_timebase.c(367): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  367 |     sw_timebase->sw_counter[index].status.PeriodFlag = 0;
       |     ^~~~~~~~~~~~~~~~~~~~~~~
 sw_timebase.c(372): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  372 |     return sw_timebase->sw_counter[index].target;
+  372 |     return sw_timebase->sw_counter[index].value;
       |            ^~~~~~~~~~~~~~~~~~~~~~~
 sw_timebase.c(376): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  376 |     sw_timebase->sw_counter[index].target = value;
+  376 |     sw_timebase->sw_counter[index].value = value;
       |     ^~~~~~~~~~~~~~~~~~~~~~~
 sw_timebase.c(380): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  380 |     return sw_timebase->sw_counter[index].temporary;
+  380 |     return sw_timebase->sw_counter[index].end_value;
       |            ^~~~~~~~~~~~~~~~~~~~~~~
 sw_timebase.c(384): warning: unsafe buffer access [-Wunsafe-buffer-usage]
-  384 |     sw_timebase->sw_counter[index].temporary = value;
+  384 |     sw_timebase->sw_counter[index].end_value = value;
       |     ^~~~~~~~~~~~~~~~~~~~~~~
-28 warnings generated.
+sw_timebase.c(388): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  388 |     return sw_timebase->sw_counter[index].period_value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(392): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  392 |     sw_timebase->sw_counter[index].period_value = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(396): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  396 |     return sw_timebase->sw_counter[index].reload_value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(400): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  400 |     sw_timebase->sw_counter[index].reload_value = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(404): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  404 |     return sw_timebase->sw_counter[index].target;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(408): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  408 |     sw_timebase->sw_counter[index].target = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(412): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  412 |     return sw_timebase->sw_counter[index].temporary;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(416): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  416 |     sw_timebase->sw_counter[index].temporary = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(622): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  622 |     return sw_timebase->sw_counter_ss[index].status.Value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(626): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  626 |     sw_timebase->sw_counter_ss[index].status.Value = value; // 4-bit mask
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(630): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  630 |     return sw_timebase->sw_counter_ss[index].status.PeriodFlag;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(634): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  634 |     sw_timebase->sw_counter_ss[index].status.PeriodFlag = (value != 0) ? 1 : 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(638): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  638 |     sw_timebase->sw_counter_ss[index].status.PeriodFlag = 0;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(644): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  644 |     return sw_timebase->sw_counter_ss[index].value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(648): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  648 |     sw_timebase->sw_counter_ss[index].value = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(652): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  652 |     return sw_timebase->sw_counter_ss[index].end_value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(656): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  656 |     sw_timebase->sw_counter_ss[index].end_value = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(660): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  660 |     return sw_timebase->sw_counter_ss[index].end_value_sub_sec;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(664): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  664 |     sw_timebase->sw_counter_ss[index].end_value_sub_sec = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(668): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  668 |     return sw_timebase->sw_counter_ss[index].period_value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(672): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  672 |     sw_timebase->sw_counter_ss[index].period_value = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(676): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  676 |     return sw_timebase->sw_counter_ss[index].reload_value;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(680): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  680 |     sw_timebase->sw_counter_ss[index].reload_value = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(684): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  684 |     return sw_timebase->sw_counter_ss[index].target;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(688): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  688 |     sw_timebase->sw_counter_ss[index].target = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(692): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  692 |     return sw_timebase->sw_counter_ss[index].temporary;
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+sw_timebase.c(696): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  696 |     sw_timebase->sw_counter_ss[index].temporary = value;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+65 warnings generated.
 compiling sw_timebase.c...
+crc32.c(42): warning: mixing declarations and code is incompatible with standards before C99 [-Wdeclaration-after-statement]
+   42 |     uint32_t endAddr = startAddr + length;
+      |              ^
+crc32.c(28): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+   28 |         CRC->DR = data[i];
+      |                   ^~~~
+2 warnings generated.
+compiling crc32.c...
+RTE/Device/STM32G030F6Px/system_stm32g0xx.c(286): warning: unsafe buffer access [-Wunsafe-buffer-usage]
+  286 |   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> RCC_CFGR_HPRE_Pos)];
+      |         ^~~~~~~~~~~~~
+1 warning generated.
+compiling system_stm32g0xx.c...
 linking...
-Program Size: Code=2884 RO-data=208 RW-data=0 ZI-data=2368  
-".\Objects\custom_library.axf" - 0 Error(s), 31 Warning(s).
+Program Size: Code=4556 RO-data=208 RW-data=0 ZI-data=3168  
+".\Objects\custom_library.axf" - 0 Error(s), 68 Warning(s).
 
 <h2>Software Packages used:</h2>
 

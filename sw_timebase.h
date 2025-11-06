@@ -4,6 +4,7 @@
 #include "stm32g030xx.h"
 
 #define TIMEBASE_COUNTER	25
+#define TIMEBASE_COUNTER_SS	25
 
 
 void sw_timebase_struct_init(void);
@@ -74,8 +75,82 @@ uint8_t sw_timebase_counter_expired(uint8_t index);
 uint8_t sw_timebase_counter_expired_event(uint8_t index);
 uint8_t sw_timebase_counter_oneshot_expired_event(uint8_t index);
 uint8_t sw_timebase_counter_continous_expired_event(uint8_t index);
+void sw_timebase_counter_set_period_value_securely(uint8_t	index, uint32_t value);
+uint32_t	sw_timebase_counter_get_remaining_period_value(uint8_t index);
+uint8_t sw_timebase_counter_period_value_expired(uint8_t index);
+uint8_t sw_timebase_counter_period_value_expired_event(uint8_t index);
 void sw_timebase_counter_reset_all(void);
 void sw_timebase_counter_update_all(void);
+
+
+
+
+
+
+// ============================================================================
+//  Sub Seconds
+// ============================================================================
+
+// --- STATUS FUNCTIONS ---
+uint8_t sw_timebase_counter_ss_get_status(uint8_t index);
+void    sw_timebase_counter_ss_set_status(uint8_t index, uint8_t value);
+
+uint8_t sw_timebase_counter_ss_get_period_status_flag(uint8_t index);
+void    sw_timebase_counter_ss_set_period_status_flag(uint8_t index, uint8_t value);
+void    sw_timebase_counter_ss_reset_period_status_flag(uint8_t index);
+
+// --- VALUE FUNCTIONS ---
+uint32_t sw_timebase_counter_ss_get_current_value(uint8_t index);
+void     sw_timebase_counter_ss_set_current_value(uint8_t index, uint32_t value);
+
+uint32_t sw_timebase_counter_ss_get_end_value(uint8_t index);
+void     sw_timebase_counter_ss_set_end_value(uint8_t index, uint32_t value);
+
+uint32_t sw_timebase_counter_ss_get_end_value_sub_sec(uint8_t index);
+void sw_timebase_counter_ss_set_end_value_sub_sec(uint8_t index, uint32_t value);
+
+uint32_t sw_timebase_counter_ss_get_period_value(uint8_t index);
+void     sw_timebase_counter_ss_set_period_value(uint8_t index, uint32_t value);
+
+uint32_t sw_timebase_counter_ss_get_reload_value(uint8_t index);
+void     sw_timebase_counter_ss_set_reload_value(uint8_t index, uint32_t value);
+
+uint32_t sw_timebase_counter_ss_get_target_value(uint8_t index);
+void     sw_timebase_counter_ss_set_target_value(uint8_t index, uint32_t value);
+
+uint32_t sw_timebase_counter_ss_get_temporary_value(uint8_t index);
+void     sw_timebase_counter_ss_set_temporary_value(uint8_t index, uint32_t value);
+
+// --- CORE COUNTER CONTROL ---
+void sw_timebase_counter_ss_reset(uint8_t index);
+void sw_timebase_counter_ss_clear_flag(uint8_t index);
+void sw_timebase_counter_ss_start(uint8_t index);
+void sw_timebase_counter_ss_stop(uint8_t index);
+void sw_timebase_counter_ss_set_securely(uint8_t index, uint32_t value);
+void sw_timebase_counter_ss_set_forcefully(uint8_t index, uint32_t value);
+void sw_timebase_counter_ss_update(uint8_t index);
+
+// --- EXPIRE FUNCTIONS ---
+uint8_t sw_timebase_counter_ss_expired(uint8_t index);
+uint8_t sw_timebase_counter_ss_expired_event(uint8_t index);
+uint8_t sw_timebase_counter_ss_oneshot_expired_event(uint8_t index);
+uint8_t sw_timebase_counter_ss_continous_expired_event(uint8_t index);
+
+// --- PERIOD FUNCTIONS ---
+void     sw_timebase_counter_ss_set_period_value_securely(uint8_t index, uint32_t value);
+uint32_t sw_timebase_counter_ss_get_remaining_period_value(uint8_t index);
+uint8_t  sw_timebase_counter_ss_period_value_expired(uint8_t index);
+uint8_t  sw_timebase_counter_ss_period_value_expired_event(uint8_t index);
+
+// --- BULK OPERATIONS ---
+void sw_timebase_counter_ss_update_all(void);
+void sw_timebase_counter_ss_reset_all(void);
+
+
+
+
+
+
 
 
 

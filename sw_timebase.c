@@ -45,6 +45,18 @@ typedef struct sw_timebase_counter_t{
 	
 }sw_timebase_counter_t;
 
+typedef struct sw_timebase_counter_ss_t{
+	
+	sw_timebase_status_t status;
+	uint32_t	end_value;
+	uint32_t	end_value_sub_sec;
+	uint32_t	value;
+	uint32_t	period_value;
+	uint32_t	reload_value;
+	uint32_t	target;
+	uint32_t	temporary;
+	
+}sw_timebase_counter_ss_t;
 
 
 
@@ -55,6 +67,7 @@ typedef struct sw_timebase_t{
 	uint8_t	updateReq;
 	
 	sw_timebase_counter_t sw_counter[TIMEBASE_COUNTER];
+	sw_timebase_counter_ss_t sw_counter_ss[TIMEBASE_COUNTER_SS];
 	
 }sw_timebase_t;
 
@@ -117,6 +130,25 @@ void sw_timebase_struct_init(void){
 	for( uint8_t i = 0; i < TIMEBASE_COUNTER; i++){
 		
 		sw_timebase->sw_counter[i].status.StatusByte = 0;
+		sw_timebase->sw_counter[i].end_value = 0;
+		sw_timebase->sw_counter[i].value = 0;
+		sw_timebase->sw_counter[i].period_value = 0;
+		sw_timebase->sw_counter[i].reload_value = 0;
+		sw_timebase->sw_counter[i].target = 0;
+		sw_timebase->sw_counter[i].temporary = 0;
+		
+	}
+	
+		for( uint8_t i = 0; i < TIMEBASE_COUNTER_SS; i++){
+		
+		sw_timebase->sw_counter_ss[i].status.StatusByte = 0;
+		sw_timebase->sw_counter_ss[i].end_value = 0;
+		sw_timebase->sw_counter_ss[i].value = 0;
+		sw_timebase->sw_counter_ss[i].period_value = 0;
+		sw_timebase->sw_counter_ss[i].reload_value = 0;
+		sw_timebase->sw_counter_ss[i].target = 0;
+		sw_timebase->sw_counter_ss[i].temporary = 0;
+		
 	}
 	
 }
@@ -312,7 +344,7 @@ uint32_t sw_timebase_get_shadow_sub_seconds_uptime_securely(void) {
 }
 
 
-/***********************************Counter part**********************************/
+/***********************************Counter part for Seconds**********************************/
 
 // --- STATUS FUNCTIONS ---
 uint8_t sw_timebase_counter_get_status(uint8_t index) {
@@ -506,6 +538,65 @@ uint8_t sw_timebase_counter_continous_expired_event(uint8_t index){
 
 
 
+void sw_timebase_counter_set_period_value_securely(uint8_t index, uint32_t value){
+    if(sw_timebase_counter_get_period_status_flag(index) == FLAG_STATE_RESET){
+
+        uint32_t curr   = sw_timebase_counter_get_current_value(index);
+        uint32_t target = sw_timebase_counter_get_target_value(index);
+
+        // If counter already reached or passed target, skip setting new period
+        if(curr >= target){
+            return;
+        }
+
+        uint32_t next_period = curr + value;
+
+        // Ensure period end doesn't exceed target
+        if(next_period > target){
+            next_period = target;
+        }
+
+        sw_timebase_counter_set_period_value(index, next_period);
+        sw_timebase_counter_set_period_status_flag(index, FLAG_STATE_SET);
+    }
+}
+
+
+
+uint32_t sw_timebase_counter_get_remaining_period_value(uint8_t index){
+    uint32_t curr   = sw_timebase_counter_get_current_value(index);
+    uint32_t target = sw_timebase_counter_get_target_value(index);
+    uint32_t period = sw_timebase_counter_get_period_value(index);
+
+    // If already beyond target, no remaining period
+    if(curr >= target) return 0;
+
+    int32_t temp = (int32_t)(period - curr);
+    if(temp < 0) temp = 0;
+    return (uint32_t)temp;
+}
+
+
+static inline uint8_t _period_expired_condition(uint8_t index) {
+    return (sw_timebase_counter_get_remaining_period_value(index) == 0 &&
+            sw_timebase_counter_get_period_status_flag(index) == FLAG_STATE_SET);
+}
+
+
+uint8_t sw_timebase_counter_period_value_expired(uint8_t index){
+    return _period_expired_condition(index) ? TIMEBASE_TRUE : TIMEBASE_FALSE;
+}
+
+uint8_t sw_timebase_counter_period_value_expired_event(uint8_t index){
+    if(_period_expired_condition(index)){
+        sw_timebase_counter_set_period_status_flag(index, FLAG_STATE_RESET);
+        return TIMEBASE_TRUE;
+    }
+    return TIMEBASE_FALSE;
+}
+
+
+
 void sw_timebase_counter_update_all(void){
   for(uint8_t i=0; i<TIMEBASE_COUNTER; i++){
     sw_timebase_counter_update(i);
@@ -522,6 +613,320 @@ void sw_timebase_counter_reset_all(void){
 
 /************************************************************************************/
 
+
+/***********************************Counter part for Sub Seconds**********************************/
+
+// --- STATUS FUNCTIONS ---
+// --- STATUS FUNCTIONS ---
+uint8_t sw_timebase_counter_ss_get_status(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].status.Value;
+}
+
+void sw_timebase_counter_ss_set_status(uint8_t index, uint8_t value) {
+    sw_timebase->sw_counter_ss[index].status.Value = value; // 4-bit mask
+}
+
+uint8_t sw_timebase_counter_ss_get_period_status_flag(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].status.PeriodFlag;
+}
+
+void sw_timebase_counter_ss_set_period_status_flag(uint8_t index, uint8_t value) {
+    sw_timebase->sw_counter_ss[index].status.PeriodFlag = (value != 0) ? 1 : 0;
+}
+
+void sw_timebase_counter_ss_reset_period_status_flag(uint8_t index) {
+    sw_timebase->sw_counter_ss[index].status.PeriodFlag = 0;
+}
+
+
+// --- VALUE FUNCTIONS ---
+uint32_t sw_timebase_counter_ss_get_current_value(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].value;
+}
+
+void sw_timebase_counter_ss_set_current_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].value = value;
+}
+
+uint32_t sw_timebase_counter_ss_get_end_value(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].end_value;
+}
+
+void sw_timebase_counter_ss_set_end_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].end_value = value;
+}
+
+uint32_t sw_timebase_counter_ss_get_end_value_sub_sec(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].end_value_sub_sec;
+}
+
+void sw_timebase_counter_ss_set_end_value_sub_sec(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].end_value_sub_sec = value;
+}
+
+uint32_t sw_timebase_counter_ss_get_period_value(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].period_value;
+}
+
+void sw_timebase_counter_ss_set_period_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].period_value = value;
+}
+
+uint32_t sw_timebase_counter_ss_get_reload_value(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].reload_value;
+}
+
+void sw_timebase_counter_ss_set_reload_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].reload_value = value;
+}
+
+uint32_t sw_timebase_counter_ss_get_target_value(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].target;
+}
+
+void sw_timebase_counter_ss_set_target_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].target = value;
+}
+
+uint32_t sw_timebase_counter_ss_get_temporary_value(uint8_t index) {
+    return sw_timebase->sw_counter_ss[index].temporary;
+}
+
+void sw_timebase_counter_ss_set_temporary_value(uint8_t index, uint32_t value) {
+    sw_timebase->sw_counter_ss[index].temporary = value;
+}
+
+
+
+
+void sw_timebase_counter_ss_reset(uint8_t index) {
+
+    sw_timebase_counter_ss_set_status(index, COUNTER_STATE_RESET);
+    sw_timebase_counter_ss_set_temporary_value(index, 0);
+    sw_timebase_counter_ss_set_target_value(index, 0);
+    sw_timebase_counter_ss_set_reload_value(index, 0);
+    sw_timebase_counter_ss_set_period_value(index, 0);
+    sw_timebase_counter_ss_set_end_value(index, 0);
+    sw_timebase_counter_ss_set_current_value(index, 0);
+    sw_timebase_counter_ss_reset_period_status_flag(index);
+}
+
+
+void sw_timebase_counter_ss_clear_flag(uint8_t index) {
+    sw_timebase_counter_ss_reset(index);
+}
+
+void sw_timebase_counter_ss_start(uint8_t index) {
+    if (sw_timebase_counter_ss_get_status(index) != COUNTER_STATE_STARTED) {
+        sw_timebase_counter_ss_set_status(index, COUNTER_STATE_START);
+    }
+}
+
+void sw_timebase_counter_ss_stop(uint8_t index) {
+    if (sw_timebase_counter_ss_get_status(index) != COUNTER_STATE_STOPPED) {
+        sw_timebase_counter_ss_set_status(index, COUNTER_STATE_STOP);
+    }
+}
+
+void sw_timebase_counter_ss_set_securely(uint8_t index, uint32_t value) {
+    if (sw_timebase_counter_ss_get_status(index) == COUNTER_STATE_RESET) {
+        uint32_t curr_s, curr_ss;
+        uint32_t subsec_val, sec_val;
+
+        // Reset and initialize
+        sw_timebase_counter_ss_set_current_value(index, 0);
+        sw_timebase_counter_ss_set_temporary_value(index, 0);
+        sw_timebase_counter_ss_set_target_value(index, value);
+
+        // Get current time in seconds + sub-seconds
+        curr_s  = sw_timebase_get_seconds();
+        curr_ss = sw_timebase_get_sub_seconds();
+
+        // Split 'value' into seconds and sub-seconds
+        subsec_val = value % sw_timebase->sw_config.UpdateRate;
+        sec_val    = value / sw_timebase->sw_config.UpdateRate;
+
+        // Add current sub-second offset
+        subsec_val += curr_ss;
+
+        // Handle sub-second overflow
+        if (subsec_val >= sw_timebase->sw_config.UpdateRate) {
+            sec_val += 1;
+            subsec_val %= sw_timebase->sw_config.UpdateRate;
+        }
+
+        // Add current second offset
+        sec_val += curr_s;
+
+        // Store end values
+        sw_timebase_counter_ss_set_end_value(index, sec_val);
+        sw_timebase_counter_ss_set_end_value_sub_sec(index, subsec_val);
+        sw_timebase_counter_ss_set_reload_value(index, value);
+
+        // Start counter
+        sw_timebase_counter_ss_set_status(index, COUNTER_STATE_STARTED);
+    }
+}
+
+void sw_timebase_counter_ss_set_forcefully(uint8_t index, uint32_t value) {
+    sw_timebase_counter_ss_reset(index);
+    sw_timebase_counter_ss_set_securely(index, value);
+}
+
+
+
+void sw_timebase_counter_ss_update(uint8_t index) {
+    uint32_t curr_s, curr_ss, temp_val, sec_val, subsec_val;
+
+    if (sw_timebase_counter_ss_get_status(index) == COUNTER_STATE_STARTED) {
+        curr_s  = sw_timebase_get_seconds();
+        curr_ss = sw_timebase_get_sub_seconds();
+
+        // Compute remaining sub-seconds
+        sec_val    = sw_timebase_counter_ss_get_end_value(index) - curr_s;
+        sec_val   *= sw_timebase->sw_config.UpdateRate;
+        subsec_val = sw_timebase_counter_ss_get_end_value_sub_sec(index) - curr_ss;
+        temp_val   = sec_val + subsec_val;
+
+        // Store temporary remaining value
+        sw_timebase_counter_ss_set_temporary_value(index, temp_val);
+
+        // Update current progress
+        sw_timebase_counter_ss_set_current_value(
+            index,
+            sw_timebase_counter_ss_get_target_value(index) - temp_val
+        );
+
+        // Handle expiry
+        if (temp_val <= 0) {
+            sw_timebase_counter_ss_set_end_value(index, 0);
+            sw_timebase_counter_ss_set_end_value_sub_sec(index, 0);
+            sw_timebase_counter_ss_set_temporary_value(index, 0);
+            sw_timebase_counter_ss_set_current_value(index, sw_timebase_counter_ss_get_target_value(index));
+            sw_timebase_counter_ss_set_reload_value(index, sw_timebase_counter_ss_get_reload_value(index));
+            sw_timebase_counter_ss_set_status(index, COUNTER_STATE_EXPIRED);
+        }
+
+    } else if (sw_timebase_counter_ss_get_status(index) == COUNTER_STATE_STOPPED) {
+        curr_s  = sw_timebase_get_seconds();
+        curr_ss = sw_timebase_get_sub_seconds();
+
+        temp_val   = sw_timebase_counter_ss_get_temporary_value(index);
+        subsec_val = temp_val % sw_timebase->sw_config.UpdateRate;
+        sec_val    = temp_val / sw_timebase->sw_config.UpdateRate;
+
+        subsec_val += curr_ss;
+        if (subsec_val >= sw_timebase->sw_config.UpdateRate) {
+            sec_val += 1;
+            subsec_val %= sw_timebase->sw_config.UpdateRate;
+        }
+        sec_val += curr_s;
+
+        // Store new end values
+        sw_timebase_counter_ss_set_end_value(index, sec_val);
+        sw_timebase_counter_ss_set_end_value_sub_sec(index, subsec_val);
+
+        // Recalculate current value
+        sw_timebase_counter_ss_set_current_value(
+            index,
+            sw_timebase_counter_ss_get_target_value(index) - sw_timebase_counter_ss_get_temporary_value(index)
+        );
+    }
+}
+
+
+uint8_t sw_timebase_counter_ss_expired(uint8_t index){
+    if(sw_timebase_counter_ss_get_status(index) == COUNTER_STATE_EXPIRED){
+        return TIMEBASE_TRUE;
+    } else {
+        return TIMEBASE_FALSE;
+    }
+}
+
+uint8_t sw_timebase_counter_ss_expired_event(uint8_t index){
+    if(sw_timebase_counter_ss_get_status(index) == COUNTER_STATE_EXPIRED){
+        sw_timebase_counter_ss_clear_flag(index);
+        return TIMEBASE_TRUE;
+    } else {
+        return TIMEBASE_FALSE;
+    }
+}
+
+uint8_t sw_timebase_counter_ss_oneshot_expired_event(uint8_t index){
+    return sw_timebase_counter_ss_expired_event(index);
+}
+
+uint8_t sw_timebase_counter_ss_continous_expired_event(uint8_t index){
+    if(sw_timebase_counter_ss_get_status(index) == COUNTER_STATE_EXPIRED){
+        uint32_t reload_val = sw_timebase_counter_ss_get_reload_value(index);
+        sw_timebase_counter_ss_clear_flag(index);
+        sw_timebase_counter_ss_set_securely(index, reload_val);
+        return TIMEBASE_TRUE;
+    } else {
+        return TIMEBASE_FALSE;
+    }
+}
+
+void sw_timebase_counter_ss_set_period_value_securely(uint8_t index, uint32_t value){
+    if(sw_timebase_counter_ss_get_period_status_flag(index) == FLAG_STATE_RESET){
+        uint32_t curr   = sw_timebase_counter_ss_get_current_value(index);
+        uint32_t target = sw_timebase_counter_ss_get_target_value(index);
+
+        if(curr >= target) return;
+
+        uint32_t next_period = curr + value;
+        if(next_period > target) next_period = target;
+
+        sw_timebase_counter_ss_set_period_value(index, next_period);
+        sw_timebase_counter_ss_set_period_status_flag(index, FLAG_STATE_SET);
+    }
+}
+
+uint32_t sw_timebase_counter_ss_get_remaining_period_value(uint8_t index){
+    uint32_t curr   = sw_timebase_counter_ss_get_current_value(index);
+    uint32_t target = sw_timebase_counter_ss_get_target_value(index);
+    uint32_t period = sw_timebase_counter_ss_get_period_value(index);
+
+    if(curr >= target) return 0;
+
+    int32_t temp = (int32_t)(period - curr);
+    if(temp < 0) temp = 0;
+    return (uint32_t)temp;
+}
+
+static inline uint8_t _period_ss_expired_condition(uint8_t index) {
+    return (sw_timebase_counter_ss_get_remaining_period_value(index) == 0 &&
+            sw_timebase_counter_ss_get_period_status_flag(index) == FLAG_STATE_SET);
+}
+
+uint8_t sw_timebase_counter_ss_period_value_expired(uint8_t index){
+    return _period_ss_expired_condition(index) ? TIMEBASE_TRUE : TIMEBASE_FALSE;
+}
+
+uint8_t sw_timebase_counter_ss_period_value_expired_event(uint8_t index){
+    if(_period_ss_expired_condition(index)){
+        sw_timebase_counter_ss_set_period_status_flag(index, FLAG_STATE_RESET);
+        return TIMEBASE_TRUE;
+    }
+    return TIMEBASE_FALSE;
+}
+
+void sw_timebase_counter_ss_update_all(void){
+    for(uint8_t i = 0; i < TIMEBASE_COUNTER_SS; i++){
+        sw_timebase_counter_ss_update(i);
+    }
+}
+
+void sw_timebase_counter_ss_reset_all(void){
+    for(uint8_t i = 0; i < TIMEBASE_COUNTER_SS; i++){
+        sw_timebase_counter_ss_reset(i);
+    }
+}
+
+
+
+/************************************************************************************/
+
 void sw_timebase_main_loop_executable(void){
 	
 	
@@ -530,6 +935,7 @@ void sw_timebase_main_loop_executable(void){
 			//Update ALL timer
 		sw_timebase_variable_sync();
 		sw_timebase_counter_update_all();
+		sw_timebase_counter_ss_update_all();
 		sw_timebase->updateReq &= ~ COUNTER_UPDATE_REQ;
 	}
 	
