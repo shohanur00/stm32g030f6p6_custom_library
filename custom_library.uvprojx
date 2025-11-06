@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32G030F6Px</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32G0xx_DFP.2.0.0</PackID>
+          <PackID>Keil.STM32G0xx_DFP.1.5.0</PackID>
           <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00002000) IROM(0x08000000,0x00008000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -410,11 +410,6 @@
               <FilePath>.\crc32.c</FilePath>
             </File>
             <File>
-              <FileName>timebase.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\timebase.c</FilePath>
-            </File>
-            <File>
               <FileName>sw_timebase.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\sw_timebase.c</FilePath>
@@ -443,11 +438,6 @@
               <FileName>crc32.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\crc32.h</FilePath>
-            </File>
-            <File>
-              <FileName>timebase.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\timebase.h</FilePath>
             </File>
             <File>
               <FileName>sw_timebase.h</FileName>

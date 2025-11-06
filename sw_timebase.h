@@ -13,7 +13,7 @@ void sw_timebase_disable(uint8_t timer_num);
 void sw_timebase_ISR_executables(void);
 void sw_timebase_main_loop_executable(void);
 void sw_timebase_variable_sync(void);
-void sw_timebase_counter_update_all(void);
+
 
 
 
@@ -64,10 +64,16 @@ uint32_t sw_timebase_counter_get_reload_value(uint8_t	index);
 void sw_timebase_counter_set_reload_value(uint8_t	index, uint32_t	value);
 
 void sw_timebase_counter_reset(uint8_t index);
-void sw_timebase_counter_reset_flag(uint8_t	index);
+void sw_timebase_counter_clear_flag(uint8_t	index);
 void sw_timebase_counter_start(uint8_t	index);
 void sw_timebase_counter_stop(uint8_t	index);
 void sw_timebase_counter_set_securely(uint8_t index,uint32_t value);
+void sw_timebase_counter_set_forcefully(uint8_t index,uint32_t value);
+void sw_timebase_counter_update(uint8_t index);
+uint8_t sw_timebase_counter_expired(uint8_t index);
+uint8_t sw_timebase_counter_expired_event(uint8_t index);
+void sw_timebase_counter_reset_all(void);
+void sw_timebase_counter_update_all(void);
 
 
 

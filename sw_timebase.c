@@ -92,6 +92,12 @@ enum{
 };
 
 
+enum{
+  TIMEBASE_FALSE            = 0,
+  TIMEBASE_TRUE             = 1,
+};
+
+
 sw_timebase_t		sw_timebase_type;
 sw_timebase_t*	sw_timebase;
 
@@ -273,7 +279,7 @@ void sw_timebase_set_shadow_sub_seconds_uptime(uint32_t value){
 
 
 uint16_t sw_timebase_get_shadow_sub_seconds_securely(void) {
-    uint32_t tmp0, tmp1;
+    uint16_t tmp0, tmp1;
     while (1) {
         tmp0 = sw_timebase->sw_time.shadow_subseconds;
         tmp1 = sw_timebase->sw_time.shadow_subseconds;
@@ -393,7 +399,7 @@ void sw_timebase_counter_reset(uint8_t index){
 	
 }
 
-void sw_timebase_counter_reset_flag(uint8_t	index){
+void sw_timebase_counter_clear_flag(uint8_t	index){
 		sw_timebase_counter_reset(index);
 }
 
@@ -457,6 +463,40 @@ void sw_timebase_counter_update(uint8_t index){
 			
 			}
 	}
+}
+
+uint8_t sw_timebase_counter_expired(uint8_t index){
+	if(sw_timebase_counter_get_status(index) == COUNTER_STATE_EXPIRED){
+			return	TIMEBASE_TRUE;
+	}else {
+			return	TIMEBASE_FALSE;
+	}
+	
+}
+
+uint8_t sw_timebase_counter_expired_event(uint8_t index){
+	if(sw_timebase_counter_get_status(index) == COUNTER_STATE_EXPIRED){
+			sw_timebase_counter_clear_flag(index);
+			return	TIMEBASE_TRUE;
+	}else {
+			return	TIMEBASE_FALSE;
+	}
+	
+}
+
+
+
+void sw_timebase_counter_update_all(void){
+  for(uint8_t i=0; i<TIMEBASE_COUNTER; i++){
+    sw_timebase_counter_update(i);
+  }
+}
+
+
+void sw_timebase_counter_reset_all(void){
+  for(uint8_t i=0; i<TIMEBASE_COUNTER; i++){
+    sw_timebase_counter_reset(i);
+  }
 }
 
 

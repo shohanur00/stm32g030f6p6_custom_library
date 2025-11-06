@@ -4,7 +4,7 @@
 ".\objects\gpio.o"
 ".\objects\app.o"
 ".\objects\crc32.o"
-".\objects\timebase.o"
+".\objects\sw_timebase.o"
 ".\objects\startup_stm32g030xx.o"
 ".\objects\system_stm32g0xx.o"
 --strict --scatter ".\Objects\custom_library.sct"
