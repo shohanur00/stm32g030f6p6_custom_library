@@ -79,6 +79,7 @@ void sw_timebase_counter_set_period_value_securely(uint8_t	index, uint32_t value
 uint32_t	sw_timebase_counter_get_remaining_period_value(uint8_t index);
 uint8_t sw_timebase_counter_period_value_expired(uint8_t index);
 uint8_t sw_timebase_counter_period_value_expired_event(uint8_t index);
+void sw_timebase_counter_delay_seconds(uint32_t	delay);
 void sw_timebase_counter_reset_all(void);
 void sw_timebase_counter_update_all(void);
 
@@ -141,6 +142,9 @@ void     sw_timebase_counter_ss_set_period_value_securely(uint8_t index, uint32_
 uint32_t sw_timebase_counter_ss_get_remaining_period_value(uint8_t index);
 uint8_t  sw_timebase_counter_ss_period_value_expired(uint8_t index);
 uint8_t  sw_timebase_counter_ss_period_value_expired_event(uint8_t index);
+
+
+void sw_timebase_counter_delay_subseconds(uint32_t	delay);
 
 // --- BULK OPERATIONS ---
 void sw_timebase_counter_ss_update_all(void);

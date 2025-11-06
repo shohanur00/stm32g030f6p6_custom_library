@@ -27,20 +27,16 @@ void App_Setup(void){
 	GPIO_SetPin(GPIOA,6);
 	Debug_Init(38400);
 	sw_timebase_Init(1000);
-	//Timebase_Init(1000); // ????? 1ms interrupt
-	//Timebase_DownCounter_Set_Securely(0, 1); // 5 sec
-	//Timebase_DownCounter_Set_Securely(1, 2); // 5 sec
 	sw_timebase_counter_ss_set_securely(0,2000);
 	sw_timebase_counter_ss_set_securely(1,500);
 	sw_timebase_counter_ss_set_period_value_securely(0,200);
-	//sw_timebase_counter_set_securely(1,2);
 	
 }
 
 
 void App_Main_Loop(void){
 	
-	//Timebase_Main_Loop_Executables();
+	
 	sw_timebase_main_loop_executable();
 	if(sw_timebase_counter_ss_period_value_expired_event(0)){
 		GPIO_TogglePin(GPIOA, 4);
@@ -48,22 +44,14 @@ void App_Main_Loop(void){
 	}
 	if (sw_timebase_counter_ss_continous_expired_event(0)){
 		GPIO_TogglePin(GPIOA, 6);
-        //GPIO_TogglePin(GPIOA, 4);
-				//sw_timebase_counter_set_forcefully(0,1);
-				//Timebase_DownCounter_Set_Forcefully(0, 1);
 		sw_timebase_counter_ss_set_period_value_securely(0,200);
 	}
 	
 	if (sw_timebase_counter_ss_continous_expired_event(1)){
 		Debug_Tx_Parameter_NL("UpTime",sw_timebase_get_shadow_sub_seconds_uptime_securely());
 	}
-
-  /*  if (sw_timebase_counter_continous_expired_event(1)){
-        GPIO_TogglePin(GPIOA, 6);
-				//sw_timebase_counter_set_forcefully(1,2);
-				//Timebase_DownCounter_Set_Forcefully(1, 2);
-			
-		}*/
+	//sw_timebase_counter_delay_seconds(2);
+	//GPIO_TogglePin(GPIOA, 4);
 	
 }
 

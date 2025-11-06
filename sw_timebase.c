@@ -240,7 +240,7 @@ void sw_timebase_ISR_executables(void){
 	sw_timebase->sw_time.shadow_subseconds++;
 	sw_timebase->sw_time.shadow_sub_seconds_uptime++;
 	
-	if(sw_timebase->sw_time.shadow_subseconds > sw_timebase->sw_config.UpdateRate){
+	if(sw_timebase->sw_time.shadow_subseconds >= sw_timebase->sw_config.UpdateRate){
 		
 		sw_timebase->sw_time.shadow_subseconds = 0;
 		sw_timebase->sw_time.shadow_seconds++;
@@ -597,6 +597,33 @@ uint8_t sw_timebase_counter_period_value_expired_event(uint8_t index){
 
 
 
+void sw_timebase_counter_delay_seconds(uint32_t delay)
+{
+    uint32_t start_sec = sw_timebase_get_shadow_seconds_securely();
+    uint32_t start_sub = sw_timebase_get_shadow_sub_seconds_securely();
+    uint32_t target_ticks = delay * sw_timebase->sw_config.UpdateRate;
+
+    uint32_t elapsed_ticks = 0;
+
+    while (elapsed_ticks < target_ticks) {
+        uint32_t curr_sec = sw_timebase_get_shadow_seconds_securely();
+        uint32_t curr_sub = sw_timebase_get_shadow_sub_seconds_securely();
+
+        if (curr_sub >= start_sub) {
+            elapsed_ticks = (curr_sec - start_sec) * sw_timebase->sw_config.UpdateRate
+                          + (curr_sub - start_sub);
+        } else {
+            // Handle sub-second overflow
+            elapsed_ticks = (curr_sec - start_sec - 1) * sw_timebase->sw_config.UpdateRate
+                          + (sw_timebase->sw_config.UpdateRate + curr_sub - start_sub);
+        }
+    }
+}
+
+
+
+
+
 void sw_timebase_counter_update_all(void){
   for(uint8_t i=0; i<TIMEBASE_COUNTER; i++){
     sw_timebase_counter_update(i);
@@ -910,6 +937,46 @@ uint8_t sw_timebase_counter_ss_period_value_expired_event(uint8_t index){
     }
     return TIMEBASE_FALSE;
 }
+
+
+void sw_timebase_counter_delay_subseconds(uint32_t delay)
+{
+    uint32_t start_sec, start_subsec;
+    uint32_t curr_sec, curr_subsec;
+    uint64_t elapsed_ticks;
+
+    // Capture shadow time atomically
+    start_sec    = sw_timebase_get_shadow_seconds_securely();
+    start_subsec = sw_timebase_get_shadow_sub_seconds_securely();
+
+    while (1)
+    {
+        // Capture shadow time atomically
+        curr_sec    = sw_timebase_get_shadow_seconds_securely();
+        curr_subsec = sw_timebase_get_shadow_sub_seconds_securely();
+
+        // Calculate elapsed ticks
+        if (curr_subsec >= start_subsec) {
+            elapsed_ticks = (uint64_t)(curr_sec - start_sec) * sw_timebase->sw_config.UpdateRate
+                          + (curr_subsec - start_subsec);
+        } else {
+            // Handle sub-second overflow
+            elapsed_ticks = (uint64_t)(curr_sec - start_sec - 1) * sw_timebase->sw_config.UpdateRate
+                          + (sw_timebase->sw_config.UpdateRate + curr_subsec - start_subsec);
+        }
+
+        if (elapsed_ticks >= delay)
+            break;
+    }
+}
+
+
+
+
+
+
+
+
 
 void sw_timebase_counter_ss_update_all(void){
     for(uint8_t i = 0; i < TIMEBASE_COUNTER_SS; i++){
