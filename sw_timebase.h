@@ -72,6 +72,8 @@ void sw_timebase_counter_set_forcefully(uint8_t index,uint32_t value);
 void sw_timebase_counter_update(uint8_t index);
 uint8_t sw_timebase_counter_expired(uint8_t index);
 uint8_t sw_timebase_counter_expired_event(uint8_t index);
+uint8_t sw_timebase_counter_oneshot_expired_event(uint8_t index);
+uint8_t sw_timebase_counter_continous_expired_event(uint8_t index);
 void sw_timebase_counter_reset_all(void);
 void sw_timebase_counter_update_all(void);
 

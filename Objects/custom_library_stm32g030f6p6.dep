@@ -28,7 +28,7 @@ I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cm
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cmsis_armclang.h)(0x626F66FE)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\mpu_armv7.h)(0x626F66FE)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include\system_stm32g0xx.h)(0x6688D1A6)
-F (.\app.c)(0x690C29C6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-I./RTE/_stm32g030f6p6-IC:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32G030xx -D_RTE_-o ./objects/app.o -MD)
+F (.\app.c)(0x690C3146)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-I./RTE/_stm32g030f6p6-IC:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32G030xx -D_RTE_-o ./objects/app.o -MD)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include\stm32g030xx.h)(0x6688D1A6)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\core_cm0plus.h)(0x626F66FE)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x6569CC32)
@@ -51,7 +51,7 @@ I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cm
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\mpu_armv7.h)(0x626F66FE)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include\system_stm32g0xx.h)(0x6688D1A6)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stddef.h)(0x6569CC32)
-F (.\sw_timebase.c)(0x690C2796)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-I./RTE/_stm32g030f6p6-IC:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32G030xx -D_RTE_-o ./objects/sw_timebase.o -MD)
+F (.\sw_timebase.c)(0x690C311C)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-I./RTE/_stm32g030f6p6-IC:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32G030xx -D_RTE_-o ./objects/sw_timebase.o -MD)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include\stm32g030xx.h)(0x6688D1A6)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\core_cm0plus.h)(0x626F66FE)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x6569CC32)
@@ -60,11 +60,12 @@ I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cm
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\cmsis_armclang.h)(0x626F66FE)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include\mpu_armv7.h)(0x626F66FE)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include\system_stm32g0xx.h)(0x6688D1A6)
+I (gpio.h)(0x6900876D)
 F (.\flash.h)(0x69008DAE)()
 F (.\gpio.h)(0x6900876D)()
 F (.\app.h)(0x69008C66)()
 F (.\crc32.h)(0x69008F65)()
-F (.\sw_timebase.h)(0x690C2720)()
+F (.\sw_timebase.h)(0x690C2FF9)()
 F (RTE/Device/STM32G030F6Px/startup_stm32g030xx.s)(0x6688D1A6)(--target=arm-arm-none-eabi -mcpu=cortex-m0plus -masm=auto  -Wa,armasm,--diag_suppress=A1950W -c-gdwarf-4-I./RTE/_stm32g030f6p6-IC:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-Wa,armasm,--pd,"__UVISION_VERSION SETA 539" -Wa,armasm,--pd,"_RTE_ SETA 1" -Wa,armasm,--pd,"STM32G030xx SETA 1" -Wa,armasm,--pd,"_RTE_ SETA 1"-o ./objects/startup_stm32g030xx.o)
 F (RTE/Device/STM32G030F6Px/system_stm32g0xx.c)(0x6688D1A6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Weverything -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier-I./RTE/_stm32g030f6p6-IC:/Users/WALTON/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/WALTON/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.5.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32G030xx -D_RTE_-o ./objects/system_stm32g0xx.o -MD)
 I (C:\Users\WALTON\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.5.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include\stm32g0xx.h)(0x6688D1A6)

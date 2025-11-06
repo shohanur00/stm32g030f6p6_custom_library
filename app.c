@@ -38,16 +38,16 @@ void App_Main_Loop(void){
 	
 	//Timebase_Main_Loop_Executables();
 	sw_timebase_main_loop_executable();
-	if (sw_timebase_counter_expired_event(0)){
+	if (sw_timebase_counter_continous_expired_event(0)){
         GPIO_TogglePin(GPIOA, 4);
-				sw_timebase_counter_set_forcefully(0,1);
+				//sw_timebase_counter_set_forcefully(0,1);
 				//Timebase_DownCounter_Set_Forcefully(0, 1);
 		
 	}
 
-    if (sw_timebase_counter_expired_event(1)){
+    if (sw_timebase_counter_continous_expired_event(1)){
         GPIO_TogglePin(GPIOA, 6);
-				sw_timebase_counter_set_forcefully(1,2);
+				//sw_timebase_counter_set_forcefully(1,2);
 				//Timebase_DownCounter_Set_Forcefully(1, 2);
 			
 		}

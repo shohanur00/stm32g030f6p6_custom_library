@@ -1,5 +1,5 @@
 #include "sw_timebase.h"
-
+#include "gpio.h"
 
 
 
@@ -132,7 +132,7 @@ void sw_timebase_enable(uint32_t UpdateHz){
 		NVIC_SetPriority(TIM17_IRQn, 0);
 		NVIC_EnableIRQ(TIM17_IRQn);
 		TIM17->CR1|=TIM_CR1_CEN;
-		//Timebase->Config.UpdateRate=UpdateHz;
+		sw_timebase->sw_config.UpdateRate= UpdateHz;
 }
 
 
@@ -212,7 +212,7 @@ void sw_timebase_ISR_executables(void){
 		
 		sw_timebase->sw_time.shadow_subseconds = 0;
 		sw_timebase->sw_time.shadow_seconds++;
-		
+		//GPIO_TogglePin(GPIOA, 4);
 	}
 	
 	sw_timebase->updateReq	|= COUNTER_UPDATE_REQ;
@@ -474,9 +474,29 @@ uint8_t sw_timebase_counter_expired(uint8_t index){
 	
 }
 
-uint8_t sw_timebase_counter_expired_event(uint8_t index){
+uint8_t sw_timebase_counter_expired_event(uint8_t index){											//Onshot
 	if(sw_timebase_counter_get_status(index) == COUNTER_STATE_EXPIRED){
 			sw_timebase_counter_clear_flag(index);
+			return	TIMEBASE_TRUE;
+	}else {
+			return	TIMEBASE_FALSE;
+	}
+	
+}
+
+
+uint8_t sw_timebase_counter_oneshot_expired_event(uint8_t index){
+	
+	return sw_timebase_counter_expired_event(index);
+	
+}
+
+uint8_t sw_timebase_counter_continous_expired_event(uint8_t index){
+	
+	if(sw_timebase_counter_get_status(index) == COUNTER_STATE_EXPIRED){
+			uint32_t reload_val = sw_timebase_counter_get_reload_value(index);
+			sw_timebase_counter_clear_flag(index);
+			sw_timebase_counter_set_securely(index,reload_val);
 			return	TIMEBASE_TRUE;
 	}else {
 			return	TIMEBASE_FALSE;
