@@ -48,3 +48,6 @@ uint32_t CRC32_MemoryRange(uint32_t startAddr, uint32_t length)
 
     return CRC->DR;
 }
+
+
+

@@ -21,9 +21,15 @@ static void flash_clear_flags(void) {
                   FLASH_SR_MISERR | FLASH_SR_FASTERR | FLASH_SR_EOP);
 }
 
+
+static void flash_wait_busy(void)
+{
+    while (FLASH->SR & FLASH_SR_BSY1);
+}
+
 void flash_erase_page(uint32_t page_address)
 {
-    while (FLASH->SR & FLASH_SR_BSY1);   // wait if busy
+    flash_wait_busy();
 	
 		flash_clear_flags();
 
@@ -34,12 +40,61 @@ void flash_erase_page(uint32_t page_address)
     FLASH->CR |= ((page_address - FLASH_BASE_ADDR) / FLASH_PAGE_SIZE) << FLASH_CR_PNB_Pos;
     FLASH->CR |= FLASH_CR_STRT;         // start erase
 
-    while (FLASH->SR & FLASH_SR_BSY1);   // wait done
+		flash_wait_busy();
 
     FLASH->CR &= ~FLASH_CR_PER;         // disable page erase
-    FLASH->SR |= FLASH_SR_EOP;          // clear EOP flag
+    FLASH->SR = FLASH_SR_EOP;          // clear EOP flag
 
 
 
     flash_lock();
+}
+
+
+void flash_erase_page_by_number(uint32_t page_number)
+{
+    flash_wait_busy();
+	
+		flash_clear_flags();
+
+    flash_unlock();
+
+    FLASH->CR |= FLASH_CR_PER;          // enable page erase
+    FLASH->CR &= ~FLASH_CR_PNB_Msk;     // clear page number bits
+    FLASH->CR |=  page_number << FLASH_CR_PNB_Pos;
+    FLASH->CR |= FLASH_CR_STRT;         // start erase
+
+    flash_wait_busy();
+
+		FLASH->SR = FLASH_SR_EOP;         	// clear EOP flag
+    FLASH->CR &= ~FLASH_CR_PER;         // disable page erase
+    
+
+
+
+    flash_lock();
+}
+
+
+/* Write one 32-bit word (runs from RAM) */
+FLASH_RAMFUNC
+void flash_write_word(uint32_t addr, uint32_t data)
+{
+    flash_wait_busy();
+    flash_clear_flags();
+    flash_unlock();
+
+    FLASH->CR |= FLASH_CR_PG;
+    *(volatile uint32_t *)addr = data;
+    flash_wait_busy();
+
+    FLASH->SR = FLASH_SR_EOP;
+    FLASH->CR &= ~FLASH_CR_PG;
+    flash_lock();
+}
+
+
+uint32_t flash_get_page_address(uint32_t page_number)
+{
+    return FLASH_BASE_ADDR + (page_number * FLASH_PAGE_SIZE);
 }

@@ -9,9 +9,18 @@
 #define FLASH_BASE_ADDR  0x08000000
 
 
+/* RAM function macro */
+#if defined(__GNUC__)
+  #define FLASH_RAMFUNC __attribute__((section(".ramfunc"), noinline))
+#else
+  #define FLASH_RAMFUNC
+#endif
+
+
 
 void flash_erase_page(uint32_t page_address);
-
-
+uint32_t flash_get_page_address(uint32_t page_number);
+void flash_write_word(uint32_t address, uint32_t data);
+void flash_erase_page_by_number(uint32_t page_number);
 
 #endif
